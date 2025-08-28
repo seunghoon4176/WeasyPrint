@@ -204,7 +204,8 @@ class Document:
     """
 
     @classmethod
-    def _build_layout_context(cls, html, font_config, counter_style, options):
+    def _build_layout_context(cls, html, font_config, counter_style, color_profiles,
+                              options):
         target_collector = TargetCollector()
         page_rules = []
         user_stylesheets = []
@@ -217,11 +218,12 @@ class Document:
             if not hasattr(css, 'matcher'):
                 css = CSS(
                     guess=css, media_type=html.media_type,
-                    font_config=font_config, counter_style=counter_style)
+                    font_config=font_config, counter_style=counter_style,
+                    color_profiles=color_profiles)
             user_stylesheets.append(css)
         style_for = get_all_computed_styles(
             html, user_stylesheets, options['presentational_hints'],
-            font_config, counter_style, page_rules, target_collector,
+            font_config, counter_style, color_profiles, page_rules, target_collector,
             options['pdf_forms'])
         get_image_from_uri = functools.partial(
             original_get_image_from_uri, cache=cache,
@@ -233,15 +235,18 @@ class Document:
         return context
 
     @classmethod
-    def _render(cls, html, font_config, counter_style, options):
+    def _render(cls, html, font_config, counter_style, color_profiles, options):
         if font_config is None:
             font_config = FontConfiguration()
 
         if counter_style is None:
             counter_style = CounterStyle()
 
+        if color_profiles is None:
+            color_profiles = {}
+
         context = cls._build_layout_context(
-            html, font_config, counter_style, options)
+            html, font_config, counter_style, color_profiles, options)
 
         root_box = build_formatting_structure(
             html.etree_element, context.style_for, context.get_image_from_uri,
@@ -252,11 +257,11 @@ class Document:
         rendering = cls(
             [Page(page_box) for page_box in page_boxes],
             DocumentMetadata(**get_html_metadata(html)),
-            html.url_fetcher, font_config)
+            html.url_fetcher, font_config, color_profiles)
         rendering._html = html
         return rendering
 
-    def __init__(self, pages, metadata, url_fetcher, font_config):
+    def __init__(self, pages, metadata, url_fetcher, font_config, color_profiles):
         #: A list of :class:`Page` objects.
         self.pages = pages
         #: A :class:`DocumentMetadata` object.
@@ -275,6 +280,8 @@ class Document:
         # rendering is destroyed. This is needed as font_config.__del__ removes
         # fonts that may be used when rendering
         self.font_config = font_config
+
+        self.color_profiles = color_profiles
 
     def copy(self, pages='all'):
         """Take a subset of the pages.
