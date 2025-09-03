@@ -2135,3 +2135,26 @@ def appearance(token):
     keyword = get_keyword(token)
     if keyword in ('none', 'auto'):
         return keyword
+
+
+@property()
+def color_scheme(tokens):
+    """``color-scheme`` property validation."""
+    accepted_color_schemes = ('light', 'dark')
+    if len(tokens) == 1:
+        keyword = get_single_keyword(tokens)
+        if keyword == 'normal' or keyword in accepted_color_schemes:
+            return keyword
+        else:
+            return
+    else:
+        keywords = []
+        for token in tokens:
+            keyword = get_keyword(token)
+            if keyword in accepted_color_schemes or keyword == 'only':
+                keywords.append(keyword)
+            elif keyword == 'normal':
+                return
+        if keywords.count('only') > 1 or keywords == ['only']:
+            return
+        return tuple(keywords)
