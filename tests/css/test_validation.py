@@ -1280,8 +1280,9 @@ def test_justify_self_invalid(rule):
     ('light only', ('light', 'only')),
     ('only light', ('light', 'only')),
     ('dark dark', ('dark', 'dark')),
-    ('light something', ('light',)),
-    ('only something light', ('light', 'only')),
+    ('light something', ('light', 'something')),
+    ('only dark light', ('dark', 'light', 'only')),
+    ('only something light', ('something', 'light', 'only')),
 ))
 def test_color_scheme(rule, value):
     assert get_value(f'color-scheme: {rule}') == value

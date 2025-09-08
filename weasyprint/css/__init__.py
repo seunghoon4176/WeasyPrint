@@ -621,6 +621,7 @@ class AnonymousStyle(dict):
             'outline_width': 0,
         })
         self.parent_style = parent_style
+        self.is_root_element = False
         self.specified = self
         if parent_style:
             self.cache = parent_style.cache
@@ -642,7 +643,13 @@ class AnonymousStyle(dict):
             value = self[key] = text_decoration(
                 key, INITIAL_VALUES[key], self.parent_style[key], cascaded=False)
         else:
-            value = self[key] = INITIAL_VALUES[key]
+            value = INITIAL_VALUES[key]
+            if key in INITIAL_NOT_COMPUTED:
+                # Value not computed yet: compute.
+                value = self[key] = COMPUTER_FUNCTIONS[key](self, key, value)
+            else:
+                # The value is the same as when computed.
+                self[key] = value
         return value
 
 
@@ -732,9 +739,11 @@ class ComputedStyle(dict):
         if key[:16] == 'text_decoration_' and parent_style is not None:
             # Text decorations are not inherited but propagated. See
             # https://www.w3.org/TR/css-text-decor-3/#line-decoration.
-            value = text_decoration(key, value, parent_style[key], key in self.cascaded)
-            if key in self:
-                del self[key]
+            if key in COMPUTER_FUNCTIONS:
+                value = COMPUTER_FUNCTIONS[key](self, key, value)
+            self[key] = text_decoration(
+                key, value, parent_style[key], key in self.cascaded)
+            print(key, value, parent_style[key], self[key])
         elif key == 'page' and value == 'auto':
             # The page property does not inherit. However, if the page value on
             # an element is auto, then its used value is the value specified on
@@ -908,8 +917,8 @@ def parse_page_selectors(rule):
 
 
 def preprocess_stylesheet(device_media_type, base_url, stylesheet_rules, url_fetcher,
-                          matcher, page_rules, font_config, counter_style, color_profiles,
-                          ignore_imports=False):
+                          matcher, page_rules, font_config, counter_style,
+                          color_profiles, ignore_imports=False):
     """Do what can be done early on stylesheet, before being in a document."""
     for rule in stylesheet_rules:
         if getattr(rule, 'content', None) is None:
@@ -1019,7 +1028,8 @@ def preprocess_stylesheet(device_media_type, base_url, stylesheet_rules, url_fet
             content_rules = tinycss2.parse_rule_list(rule.content)
             preprocess_stylesheet(
                 device_media_type, base_url, content_rules, url_fetcher, matcher,
-                page_rules, font_config, counter_style, color_profiles, ignore_imports=True)
+                page_rules, font_config, counter_style, color_profiles,
+                ignore_imports=True)
 
         elif rule.type == 'at-rule' and rule.lower_at_keyword == 'page':
             data = parse_page_selectors(rule)

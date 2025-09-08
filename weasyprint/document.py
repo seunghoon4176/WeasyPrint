@@ -313,7 +313,8 @@ class Document:
         elif not isinstance(pages, list):
             pages = list(pages)
         return type(self)(
-            pages, self.metadata, self.url_fetcher, self.font_config)
+            pages, self.metadata, self.url_fetcher, self.font_config,
+            self.color_profiles)
 
     def make_bookmark_tree(self, scale=1, transform_pages=False):
         """Make a tree of all bookmarks in the document.

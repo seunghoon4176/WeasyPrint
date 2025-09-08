@@ -16,7 +16,7 @@ def test_find_stylesheets():
 
     sheets = list(find_stylesheets(
         html.wrapper_element, 'print', default_url_fetcher, html.base_url,
-        font_config=None, counter_style=None, page_rules=None))
+        font_config=None, counter_style=None, page_rules=None, color_profiles=None))
     assert len(sheets) == 2
     # Also test that stylesheets are in tree order.
     sheet_names = [
