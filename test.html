@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini WeasyPrint 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #e74c3c;
+            margin-top: 30px;
+        }
+        .highlight {
+            background-color: #f1c40f;
+            padding: 5px;
+            font-weight: bold;
+        }
+        .info-box {
+            background-color: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .code {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 Mini WeasyPrint 테스트 문서</h1>
+    
+    <h2>📋 개요</h2>
+    <p>이것은 <strong>Mini WeasyPrint</strong>의 기능을 테스트하는 문서입니다. 
+    원래 WeasyPrint와 비교해서 <em>훨씬 가벼운</em> 버전입니다.</p>
+    
+    <div class="info-box">
+        <p><strong>주요 특징:</strong></p>
+        <p>• 단일 파일로 구성</p>
+        <p>• 최소한의 의존성 (reportlab만 필요)</p>
+        <p>• 기본적인 HTML/CSS 지원</p>
+        <p>• 윈도우 환경 최적화</p>
+    </div>
+    
+    <h2>🎨 스타일 테스트</h2>
+    <p>이 텍스트는 일반 단락입니다.</p>
+    <p class="highlight">이 텍스트는 하이라이트됩니다.</p>
+    
+    <h3>코드 예제</h3>
+    <div class="code">
+python mini_weasyprint.py input.html output.pdf
+    </div>
+    
+    <h2>📊 기능 비교</h2>
+    <p><strong>원본 WeasyPrint vs Mini WeasyPrint:</strong></p>
+    
+    <h4>원본 WeasyPrint:</h4>
+    <p>• 8개의 주요 의존성</p>
+    <p>• 완전한 CSS 지원</p>
+    <p>• 복잡한 레이아웃</p>
+    <p>• 큰 설치 용량</p>
+    
+    <h4>Mini WeasyPrint:</h4>
+    <p>• 1개의 주요 의존성 (reportlab)</p>
+    <p>• 기본적인 CSS 지원</p>
+    <p>• 간단한 문서 레이아웃</p>
+    <p>• 작은 설치 용량</p>
+    
+    <hr>
+    
+    <h2>✅ 결론</h2>
+    <p>Mini WeasyPrint는 간단한 HTML 문서를 PDF로 변환하는 데 
+    <span class="highlight">완벽한 솔루션</span>입니다!</p>
+    
+    <p><em>2024년 테스트 완료</em></p>
+</body>
+</html>
